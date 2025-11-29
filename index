@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Clothify — Simple E-commerce</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#ff6b6b;
+      --muted:#666;
+      --bg:#f7f7f8;
+      --maxw:1100px;
+      font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:#111;line-height:1.4}
+    .container{max-width:var(--maxw);margin:0 auto;padding:20px}
+
+    /* NAV */
+    header{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.06);position:sticky;top:0;z-index:20}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:12px 20px}
+    .logo{font-weight:700;letter-spacing:1px}
+    .nav-links{display:flex;gap:14px;align-items:center;margin:0;padding:0;list-style:none}
+    .nav-links a{color:var(--muted);text-decoration:none;font-weight:600}
+    .nav-actions{display:flex;gap:12px;align-items:center}
+    .cart-btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
+
+    /* HERO */
+    .hero{display:flex;align-items:center;gap:30px;padding:40px 0}
+    .hero-left{flex:1}
+    .hero h1{margin:0 0 10px;font-size:clamp(22px,4vw,36px)}
+    .hero p{margin:0 0 18px;color:var(--muted)}
+    .hero .cta{background:var(--accent);color:#fff;padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+
+    .hero-image{flex:1;display:flex;justify-content:center}
+    .hero-image img{max-width:320px;width:100%;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+
+    /* PRODUCTS */
+    .section-title{margin:30px 0 12px;font-size:18px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+    .card{background:#fff;border-radius:10px;padding:12px;box-shadow:0 4px 14px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:8px}
+    .card img{width:100%;height:180px;object-fit:cover;border-radius:8px}
+    .card h3{margin:0;font-size:16px}
+    .price{font-weight:700;color:var(--accent)}
+    .card .actions{margin-top:auto;display:flex;gap:8px}
+    .btn{flex:1;padding:8px 10px;border-radius:8px;border:none;cursor:pointer}
+    .btn.secondary{background:#eee}
+    .btn.primary{background:var(--accent);color:#fff}
+
+    /* FOOTER */
+    footer{padding:24px 0;text-align:center;color:var(--muted);font-size:14px;margin-top:28px}
+
+    /* small */
+    @media (max-width:600px){
+      .hero{flex-direction:column-reverse;text-align:center}
+      .hero-image img{max-width:260px}
+      .nav-links{display:none}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="logo">CLOTHIFY</div>
+
+      <ul class="nav-links" aria-label="Main navigation">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="products.html" class="nav-link">Shop</a>
+        <button id="cartBtn" class="cart-btn" aria-label="View cart">Cart (<span id="cartCount">0</span>)</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="hero-left">
+        <h1 id="hero-heading">Trendy • Comfortable • Affordable</h1>
+        <p>Explore our curated collection — shirts, tees, jeans and more. Free shipping over ₹999.</p>
+        <a href="products.html" class="cta" id="shopNow">Shop Now</a>
+      </div>
+      <div class="hero-image" aria-hidden="true">
+        <img src="https://i.imgur.com/WRqP0PQ.jpeg" alt="Featured clothing">
+      </div>
+    </section>
+
+    <!-- FEATURED -->
+    <h2 class="section-title">Featured Products</h2>
+    <section class="grid" id="products">
+      <!-- product cards (JS will populate this) -->
+    </section>
+
+    <!-- SIMPLE INFO -->
+    <section style="margin-top:22px">
+      <p style="color:var(--muted)">This is a starter template. Create a real <code>products.html</code>, product pages and a backend when ready.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">© <span id="year"></span> Clothify • Simple demo store</div>
+  </footer>
+
+  <script>
+    // small product dataset (replace with real data / API)
+    const PRODUCTS = [
+      { id: "p1", title: "Casual Shirt", price: 799, img: "https://i.imgur.com/WRqP0PQ.jpeg" },
+      { id: "p2", title: "Graphic T-Shirt", price: 499, img: "https://i.imgur.com/g6tFetF.jpeg" },
+      { id: "p3", title: "Blue Denim Jeans", price: 1299, img: "https://i.imgur.com/cRdmPtP.jpeg" },
+      { id: "p4", title: "Hooded Sweatshirt", price: 999, img: "https://i.imgur.com/8RKXAIV.jpeg" }
+    ];
+
+    // render products
+    const productsEl = document.getElementById('products');
+    PRODUCTS.forEach(p => {
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="${p.img}" alt="${p.title}">
+        <h3>${p.title}</h3>
+        <div class="price">₹${p.price}</div>
+        <div class="actions">
+          <button class="btn secondary" onclick="viewProduct('${p.id}')">View</button>
+          <button class="btn primary" onclick="addToCart('${p.id}')">Add to Cart</button>
+        </div>
+      `;
+      productsEl.appendChild(card);
+    });
+
+    // cart management (localStorage)
+    const CART_KEY = 'clothify_cart_v1';
+    function getCart(){ return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
+    function saveCart(cart){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartCount(); }
+    function addToCart(productId){
+      const cart = getCart();
+      const item = cart.find(i=>i.id===productId);
+      if(item) item.qty++;
+      else cart.push({ id: productId, qty: 1 });
+      saveCart(cart);
+      alert('Added to cart');
+    }
+    function updateCartCount(){
+      const cart = getCart();
+      const total = cart.reduce((s,i)=>s+i.qty,0);
+      document.getElementById('cartCount').textContent = total;
+    }
+    function viewProduct(id){
+      // example: navigate to product page by id (create product pages or route)
+      // For demo we just alert. Replace with: location.href = `product.html?id=${id}`
+      alert('Open product page for: ' + id);
+    }
+
+    // cart button demo behavior
+    document.getElementById('cartBtn').addEventListener('click', ()=> {
+      const cart = getCart();
+      if(!cart.length) { alert('Cart is empty'); return; }
+      // In real site redirect to cart page: location.href = 'cart.html';
+      alert('Cart items: ' + JSON.stringify(cart));
+    });
+
+    // init
+    document.getElementById('year').textContent = new Date().getFullYear();
+    updateCartCount();
+  </script>
+</body>
+</html>
